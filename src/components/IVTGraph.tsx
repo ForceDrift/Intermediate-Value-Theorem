@@ -30,12 +30,6 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
     targetY,
     intersections,
 }) => {
-    // Calculate domain to add some padding
-    const allY = [...data.map((p) => p.y), targetY];
-    const minY = Math.min(...allY);
-    const maxY = Math.max(...allY);
-    const padding = (maxY - minY) * 0.1 || 1;
-
     return (
         <div className="w-full h-full min-h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -44,7 +38,7 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                     <XAxis
                         dataKey="x"
                         type="number"
-                        domain={['auto', 'auto']}
+                        domain={['dataMin', 'dataMax']}
                         tick={{ fill: '#64748b' }}
                         allowDataOverflow={false}
                         stroke="#94a3b8"
@@ -52,9 +46,11 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                         <Label value="x" offset={-10} position="insideBottomRight" fill="#64748b" />
                     </XAxis>
                     <YAxis
-                        domain={[minY - padding, maxY + padding]}
+                        domain={['auto', 'auto']}
                         tick={{ fill: '#64748b' }}
                         stroke="#94a3b8"
+                        allowDataOverflow={false}
+                        scale="linear"
                     >
                         <Label value="f(x)" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} fill="#64748b" />
                     </YAxis>
@@ -115,6 +111,24 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                         strokeOpacity={0.7}
                     />
 
+                    {/* Y-axis marker for f(a) */}
+                    <ReferenceDot
+                        x={0}
+                        y={startPoint.y}
+                        r={5}
+                        fill="#10b981"
+                        stroke="#fff"
+                        strokeWidth={2}
+                    />
+                    {/* Y-axis marker for f(b) */}
+                    <ReferenceDot
+                        x={0}
+                        y={endPoint.y}
+                        r={5}
+                        fill="#10b981"
+                        stroke="#fff"
+                        strokeWidth={2}
+                    />
                     {/* Start Point (a, f(a)) */}
                     <ReferenceDot
                         x={startPoint.x}
@@ -129,7 +143,7 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
 
                     {/* End Point (b, f(b)) */}
                     <ReferenceDot
-                        x={endPoint.x}
+                        x={startPoint.x}
                         y={endPoint.y}
                         r={7}
                         fill="#10b981"
