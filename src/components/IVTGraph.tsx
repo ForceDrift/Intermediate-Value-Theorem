@@ -30,12 +30,6 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
     targetY,
     intersections,
 }) => {
-    // Calculate domain to add some padding
-    const allY = [...data.map((p) => p.y), targetY];
-    const minY = Math.min(...allY);
-    const maxY = Math.max(...allY);
-    const padding = (maxY - minY) * 0.1 || 1;
-
     return (
         <div className="w-full h-full min-h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -44,7 +38,7 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                     <XAxis
                         dataKey="x"
                         type="number"
-                        domain={['auto', 'auto']}
+                        domain={['dataMin', 'dataMax']}
                         tick={{ fill: '#64748b' }}
                         allowDataOverflow={false}
                         stroke="#94a3b8"
@@ -52,9 +46,11 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                         <Label value="x" offset={-10} position="insideBottomRight" fill="#64748b" />
                     </XAxis>
                     <YAxis
-                        domain={[minY - padding, maxY + padding]}
+                        domain={['auto', 'auto']}
                         tick={{ fill: '#64748b' }}
                         stroke="#94a3b8"
+                        allowDataOverflow={false}
+                        scale="linear"
                     >
                         <Label value="f(x)" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} fill="#64748b" />
                     </YAxis>
@@ -79,25 +75,83 @@ const IVTGraph: React.FC<IVTGraphProps> = ({
                         <Label value={`k = ${targetY}`} position="insideTopRight" fill="#ef4444" />
                     </ReferenceLine>
 
+                    {/* Vertical line at x = a */}
+                    <ReferenceLine x={startPoint.x} stroke="#10b981" strokeDasharray="3 3" strokeWidth={1.5} strokeOpacity={0.5} />
+
+                    {/* Vertical line at x = b */}
+                    <ReferenceLine x={endPoint.x} stroke="#10b981" strokeDasharray="3 3" strokeWidth={1.5} strokeOpacity={0.5} />
+
+                    {/* Horizontal line from f(a) to y-axis */}
+                    <ReferenceLine y={startPoint.y} stroke="#10b981" strokeDasharray="3 3" strokeWidth={1.5} strokeOpacity={0.5} />
+
+                    {/* Horizontal line from f(b) to y-axis */}
+                    <ReferenceLine y={endPoint.y} stroke="#10b981" strokeDasharray="3 3" strokeWidth={1.5} strokeOpacity={0.5} />
+
+                    {/* Extrapolation line from f(a) to target */}
+                    <ReferenceLine
+                        segment={[
+                            { x: startPoint.x, y: startPoint.y },
+                            { x: startPoint.x, y: targetY }
+                        ]}
+                        stroke="#10b981"
+                        strokeWidth={2}
+                        strokeDasharray="8 4"
+                        strokeOpacity={0.7}
+                    />
+
+                    {/* Extrapolation line from f(b) to target */}
+                    <ReferenceLine
+                        segment={[
+                            { x: endPoint.x, y: endPoint.y },
+                            { x: endPoint.x, y: targetY }
+                        ]}
+                        stroke="#10b981"
+                        strokeWidth={2}
+                        strokeDasharray="8 4"
+                        strokeOpacity={0.7}
+                    />
+
+                    {/* Y-axis marker for f(a) */}
+                    <ReferenceDot
+                        x={0}
+                        y={startPoint.y}
+                        r={5}
+                        fill="#10b981"
+                        stroke="#fff"
+                        strokeWidth={2}
+                    />
+                    {/* Y-axis marker for f(b) */}
+                    <ReferenceDot
+                        x={0}
+                        y={endPoint.y}
+                        r={5}
+                        fill="#10b981"
+                        stroke="#fff"
+                        strokeWidth={2}
+                    />
                     {/* Start Point (a, f(a)) */}
                     <ReferenceDot
                         x={startPoint.x}
                         y={startPoint.y}
-                        r={6}
+                        r={7}
                         fill="#10b981"
                         stroke="#fff"
                         strokeWidth={2}
-                    />
+                    >
+                        <Label value={`f(a) = ${startPoint.y.toFixed(2)}`} position="right" offset={10} fill="#10b981" fontSize={13} fontWeight="bold" />
+                    </ReferenceDot>
 
                     {/* End Point (b, f(b)) */}
                     <ReferenceDot
-                        x={endPoint.x}
+                        x={startPoint.x}
                         y={endPoint.y}
-                        r={6}
+                        r={7}
                         fill="#10b981"
                         stroke="#fff"
                         strokeWidth={2}
-                    />
+                    >
+                        <Label value={`f(b) = ${endPoint.y.toFixed(2)}`} position="right" offset={10} fill="#10b981" fontSize={13} fontWeight="bold" />
+                    </ReferenceDot>
 
                     {/* Intersection Points (c, k) */}
                     {intersections.map((point, index) => (

@@ -31,7 +31,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function Home() {
-  const [functionStr, setFunctionStr] = useState('x^3 - 2x + 1');
+  const [functionStr, setFunctionStr] = useState('20*sin(x+3)*cos(x^2/2)');
   const [rangeStart, setRangeStart] = useState<number | null>(null);
   const [rangeEnd, setRangeEnd] = useState<number | null>(null);
   const [targetY, setTargetY] = useState(0);
@@ -83,16 +83,6 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-4 py-8"
         >
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <Sparkles className="w-8 h-8 text-indigo-500 animate-pulse" />
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
-              Intermediate Value Theorem
-            </h1>
-            <Sparkles className="w-8 h-8 text-violet-500 animate-pulse" />
-          </div>
-          <p className="text-slate-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-medium">
-            Explore the fundamental property of continuous functions: if you can get from <span className="font-bold text-indigo-600">A</span> to <span className="font-bold text-violet-600">B</span> without lifting your pen, you must cross every line in between.
-          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -106,10 +96,6 @@ export default function Home() {
           >
             <Card className="border-slate-200/60 shadow-xl backdrop-blur-sm bg-white/90 hover:shadow-2xl transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <Calculator className="w-5 h-5 text-indigo-500" />
-                  Configuration
-                </CardTitle>
                 <CardDescription>
                   Define the function and interval to visualize.
                 </CardDescription>
@@ -214,7 +200,7 @@ export default function Home() {
                 </div>
 
                 <Alert variant={isBetween ? "default" : "destructive"} className={`border-0 ${isBetween ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                  {isBetween ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                  { }
                   <AlertTitle className="ml-2 font-bold">{isBetween ? "Applicable" : "Not Applicable"}</AlertTitle>
                   <AlertDescription className="ml-2 text-xs opacity-90">
                     {isBetween
